@@ -1,0 +1,28 @@
+{% load staticfiles %}
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<title>{% block head_title %} New Website {% endblock head_title %}</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+		{% block head_extra %} {% endblock head_extra %}
+	</head>
+	<body>
+		{% include "posts/includes/messages.html" %}
+		<div class="container">
+			{% block content %}{% endblock content %}
+		</div>
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$(".content-markdown").each(function(){
+					var content = $(this).text()
+					var mContent = marked(content)
+					$(this).html(mContent)
+				})
+				
+			})
+		</script>
+	</body>
+</html>

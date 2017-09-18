@@ -1,0 +1,38 @@
+{% extends "posts/base.html" %}
+{% load crispy_forms_tags %}
+{% block head_title %} {{ title }} | New Website {% endblock head_title %}
+{% block content %}
+	<div class='col-sm-8 col-sm-offset-2'>
+		{% if obj.image %}
+		<img src="{{ obj.image.url }}" class="img-responsive" />
+		{% endif %}
+		<h1>{{ title }}</h1><small>{{obj.timestamp}}</small>
+		<form method="POST" action=".">{% csrf_token %}
+			{{ vote_form|crispy}}
+			<input type="submit" name="up" value="up" class="btn btn-default">
+			<input type="submit" name="down"  value="down" class="btn btn-default">
+		</form>
+		<div class="col-sm-12 content-markdown">{{ obj.content }}</div>
+		<p>Upvotes : {{upvote}}  |  Downvotes : {{downvote}}</p>
+		<div>
+			<p class='lead'>Comments</p>
+			<form method="POST" action=".">{% csrf_token %}
+				{{ comment_form|crispy }}
+				<input type="submit" value="Post Comment" class="btn btn-default">
+			</form>
+			{% for com in comments %}
+				<blockquote><p>{{com.content}} | <small>{{com.timestamp|timesince}} ago</small></p>
+				{% for child in com.children %}
+				<blockquote>
+				<p>{{child.content}} | <small>{{child.timestamp|timesince}} ago</small></p>
+				</blockquote>
+				{% endfor %}
+			<form method="POST" action=".">{% csrf_token %}
+				{{ comment_form|crispy }}
+				<input type="hidden" name="parent_id" value="{{ com.id }}">
+				<input type="submit" value="Reply" class="btn btn-default">
+			</form>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
